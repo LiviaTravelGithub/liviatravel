@@ -1,0 +1,47 @@
+:root {
+    --color-1: #003056;
+    --color-2: #04518C;
+    --color-3: #00A1D9;
+    --color-4: #47D9BF;
+    --color-5: #F2D03B;
+}
+
+html,
+body {
+    padding: 0;
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    overflow-x: hidden;
+}
+
+
+.ribbon {
+    margin: 0;
+    padding: 0;
+    background: var(--color-4);
+    color: white;
+    text-shadow: 1px 1px 2px #000;
+    padding: 1em 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateX(30%) translateY(0%) rotate(45deg);
+    transform-origin: top left;
+    filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.5));
+}
+
+.ribbon:before,
+.ribbon:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    margin: 0 -1px;
+    /* tweak */
+    width: 100%;
+    height: 100%;
+    background: var(--color-4);
+}
+
+.ribbon:before {
+    right: 100%;
+}
