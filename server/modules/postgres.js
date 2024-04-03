@@ -9,7 +9,7 @@ const pool = new Pool({
     database: process.env.PORT ? process.env.PG_DATABASE : 'offers_yy98',
     port: 5432,
     host: process.env.PORT ? process.env.PG_HOST : 'localhost',
-    // ssl: { rejectUnauthorized: false }
+    ssl: { rejectUnauthorized: false }
 })
 
 const connection = {
