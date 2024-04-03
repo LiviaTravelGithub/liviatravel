@@ -117,8 +117,13 @@ const tours = ref();
 const offers = ref();
 
 onMounted(async () => {
-  console.log(allOffers);
-  const offersData = allOffers.data.value !== null ? allOffers.data.value.rows : await useFetch("/api/offersInfo").then((res) => res.data.value.rows);
+  let offersData = []
+  if(allOffers.data.value === null) {
+    const response = await fetch("/api/offersInfo");
+    console.log(response);
+  }else{
+    offersData = allOffers.data.value.rows;
+  }
   carouselOffers.value = offersData.slice(0, 3);
   offersData.forEach((offer) => {
     if (offer.is_special) {
