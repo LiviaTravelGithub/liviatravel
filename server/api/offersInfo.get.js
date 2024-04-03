@@ -1,6 +1,11 @@
 import connection from '../modules/postgres.js'
 export default defineEventHandler(async (event) => {
-    console.log('offersInfo.get', event)
-    const data = connection.query('SELECT * FROM lt_offers')
-    return data
+    try {
+        const data = connection.query('SELECT * FROM lt_offers')
+        console.log(data)
+        return data
+    } catch (error) {
+        console.log(error)
+        return
+    }
 })
