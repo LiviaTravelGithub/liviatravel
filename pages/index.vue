@@ -54,7 +54,7 @@
           <div class="offer-details">
             <Button
               label="Rezervă"
-              @click="showRezervationDialog(specialOffer)"
+              @click="showOffer(specialOffer)"
             />
             <div class="special-offer-price">
               <div>
@@ -87,7 +87,15 @@ import TourCard from "../components/TourCard.vue";
 const allOffers = await useFetch("/api/offersInfo");
 const allTours = await useFetch("/api/toursInfo");
 
+const store = useMainStore();
+
 const descLimit = ref(200);
+
+const showOffer = (offer) => {
+  store.setOffer(offer);
+  store.setOfferType("offer");
+  navigateTo("/oferta");
+}
 
 const isMobile = () => {
   if (
@@ -117,13 +125,7 @@ const tours = ref();
 const offers = ref();
 
 onMounted(async () => {
-  let offersData = []
-  if(allOffers.data.value === null) {
-    const response = await fetch("/api/offersInfo");
-    console.log(response);
-  }else{
-    offersData = allOffers.data.value.rows;
-  }
+  const offersData = allOffers.data.value.rows;
   carouselOffers.value = offersData.slice(0, 3);
   offersData.forEach((offer) => {
     if (offer.is_special) {
@@ -155,6 +157,6 @@ const latestTours = () => {
 @import "~/assets/css/home.carousel.scss";
 @import "~/assets/css/home.offers.scss";
 .home-container {
-  margin-top: 70px;
+  margin-top: 50px;
 }
 </style>

@@ -1,0 +1,171 @@
+<template>
+  <form class="tour-form">
+    <div class="form-row tour-form-row">
+      <span class="p-float-label">
+        <InputText
+          id="last_name"
+          type="text"
+          v-model="rezervationData.lastName"
+        />
+        <label for="last_name">Nume</label>
+      </span>
+      <span class="p-float-label">
+        <InputText
+          id="first_name"
+          type="text"
+          v-model="rezervationData.firstName"
+        />
+        <label for="first_name">Prenume</label>
+      </span>
+    </div>
+    <div class="form-row tour-form-row">
+      <span class="p-float-label">
+        <InputText
+          id="email"
+          type="text"
+          v-model="rezervationData.email"
+        />
+        <label for="email">Email</label>
+      </span>
+      <span class="p-float-label">
+        <InputText
+          id="phone"
+          type="text"
+          v-model="rezervationData.phone"
+        />
+        <label for="phone">Telefon</label>
+      </span>
+    </div>
+    <div class="form-row tour-form-row">
+      <span class="p-float-label">
+        <InputText
+          id="adults"
+          type="number"
+          v-model="rezervationData.adults"
+        />
+        <label for="adults">Adulti</label>
+      </span>
+      <span class="p-float-label">
+        <InputText
+          id="children"
+          type="number"
+          v-model="rezervationData.children"
+        />
+        <label for="children">Copii</label>
+      </span>
+    </div>
+    <span class="tour-form-info">
+      <ul>
+        <li>
+          Circuit: <span>{{ rezervationData.title }}</span>
+        </li>
+        <li>
+          Persoane:
+          <span>{{
+            parseInt(rezervationData.adults, 10) +
+            parseInt(rezervationData.children, 10)
+          }}</span>
+        </li>
+        <li>
+          Pret:
+          <span
+            >{{
+              parseInt(rezervationData.price, 10) *
+                parseInt(rezervationData.adults, 10) +
+              parseInt(rezervationData.children, 10)
+            }}
+            &euro;</span
+          >
+        </li>
+      </ul>
+    </span>
+    <Button label="Rezervare" @click="rezerveTour" />
+  </form>
+</template>
+<script setup>
+import InputText from "primevue/inputtext";
+import Button from "primevue/button";
+import { useMainStore } from "~/stores/main";
+import { useToast } from "primevue/usetoast";
+import { useRouter } from "vue-router";
+const router = useRouter();
+const toast = useToast();
+const store = useMainStore();
+
+const rezervationData = ref({});
+
+onMounted(() => {
+  if(store.rezervationTour === null){
+    store.setTour(JSON.parse(localStorage.getItem("rezervationTour")));
+  }
+  console.log(store.rezervationTour);
+  rezervationData.value.title = store.rezervationTour.title;
+  rezervationData.value.adults = 1;
+  rezervationData.value.children = 0;
+  rezervationData.value.price = store.rezervationTour.price;
+});
+
+// function rezerveTour(e) {
+//   e.preventDefault();
+
+//   const rezervationData = {
+//     firstName: store.tourRezervation.firstName,
+//     lastName: store.tourRezervation.lastName,
+//     email: store.tourRezervation.email,
+//     phone: store.tourRezervation.phone,
+//     adults: store.tourRezervation.adults,
+//     children: store.tourRezervation.children,
+//     tourName: store.rezervationTour.title,
+//   };
+
+//   try {
+//     axios
+//       .post(`${store.url}/newRezervationTour`, rezervationData)
+//       .then((res) => {
+//         if (res.status === 200) {
+//           store.setTour(res.data.tour);
+//           toast.add({
+//             severity: "success",
+//             summary: "Succes",
+//             detail: "Rezervare realizata cu succes!",
+//             life: 3000,
+//           });
+
+//           router.push({ name: "offers" });
+//         }
+//       });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
+</script>
+<style lang="scss">
+.tour-form {
+  .p-button {
+    width: 100%;
+  }
+}
+
+.tour-form-row {
+  span {
+    width: 50%;
+  }
+  input {
+    width: 100%;
+  }
+}
+
+.tour-form-info {
+  ul {
+    list-style: none;
+    font-size: 1.5rem;
+    margin: 2rem 0;
+    padding: 0;
+    color: var(--color-3);
+    span {
+      font-weight: bold;
+      color: var(--color-2);
+    }
+  }
+}
+</style>

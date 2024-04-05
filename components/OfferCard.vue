@@ -12,7 +12,7 @@
     </template>
     <template #content>
       <p v-if="!isTour">
-        {{ offer.description.substring(0, 200) }}...
+        {{ offer.description.substring(0, 150) }}...
       </p>
       <p v-if="isTour">
         <ul>
@@ -44,6 +44,7 @@ import Card from "primevue/card";
 import Button from "primevue/button";
 import Rating from "primevue/rating";
 import { ref, onMounted } from "vue";
+const store = useMainStore();
 
 const props = defineProps({
   offer: {
@@ -58,6 +59,16 @@ const props = defineProps({
 const isTour = ref(false);
 let intRating = ref(0)
 
+const showOffer = (offer) => {
+  store.setOffer(offer);
+  store.setOfferType("offer");
+  navigateTo("/oferta");
+};
+
+const showTour = (tour) => {
+  store.setTour(tour);
+  navigateTo("/oferta");
+};
 
 function setRating() {
   intRating.value = parseInt(props.offer.rating, 10);
@@ -103,6 +114,11 @@ onMounted(() => {
     .currency {
       font-size: 1rem;
     }
+  }
+  .p-button:hover {
+    background: var(--color-5);
+    border: 1px solid var(--color-5);
+    color: var(--color-2);
   }
 }
 
@@ -153,7 +169,7 @@ onMounted(() => {
   }
 }
 
-@media screen and (max-width: 414px) {
+@media screen and (max-width: 851px), (max-width: 414px) {
   .p-card {
     width: 90%;
   }

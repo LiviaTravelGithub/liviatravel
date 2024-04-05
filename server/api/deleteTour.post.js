@@ -1,8 +1,12 @@
 import connection from "../modules/postgres";
 export default defineEventHandler(async (event) => {
     try {
-        const data = connection.query('SELECT * FROM lt_tours')
-        return data
+        const id = await readBody(event)
+        const query = `DELETE FROM lt_tours WHERE id = $1`
+        await connection.query(query, [id])
+        return {
+            success: true
+        }
     } catch (error) {
         console.log(error)
         return {

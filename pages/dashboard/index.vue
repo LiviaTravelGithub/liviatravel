@@ -1,5 +1,5 @@
 <template>
-  <div class="login-screen">
+  <div class="login-screen" v-if="!store.isLoggedIn">
     <div class="login-container">
       <h1>Login</h1>
       <span class="p-float-label">

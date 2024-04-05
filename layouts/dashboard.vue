@@ -8,7 +8,7 @@
       label="A"
       size="large"
       shape="circle"
-      style="cursor: pointer; background-color: var(--color-5);"
+      style="cursor: pointer; background-color: var(--color-5)"
       @click="toggleUserPanel"
     />
     <OverlayPanel ref="userMenu">
@@ -38,22 +38,77 @@
       </nav>
     </section>
     <main class="dashboard-main">
-        <slot />
+      <slot />
     </main>
+    <Dialog
+      v-model:visible="dialogVisible"
+      modal
+      header="Confirmare"
+      class="p-fluid"
+    >
+      <p class="pass-change">
+        <span class="p-float-label">
+          <InputText id="username" v-model="newInfo.username" />
+          <label for="username">Username</label>
+        </span>
+        <span class="p-float-label">
+          <Password id="oldPassword" v-model="newInfo.oldPassword" />
+          <label for="oldPassword">Parola Veche</label>
+        </span>
+        <span class="p-float-label">
+          <Password id="newPasswod" v-model="newInfo.newPassword" />
+          <label for="newPasswod">Parola noua</label>
+        </span>
+      </p>
+      <Button class="p-button p-button-info" @click="changePass()"
+        >Schimba</Button
+      >
+    </Dialog>
+    <Toast />
   </div>
 </template>
 <script setup>
+import Dialog from "primevue/dialog";
 import { useMainStore } from "~/stores/main";
 import OverlayPanel from "primevue/overlaypanel";
 import Logo from "~/components/Logo.vue";
+import Password from "primevue/password";
+import InputText from "primevue/inputtext";
+import Toast from "primevue/toast";
+import {useToast } from "primevue/usetoast";
+const toast = useToast();
 const store = useMainStore();
 const userMenu = ref();
-const router = useRouter();
+const dialogVisible = ref(false);
+const logout = () => {
+  store.toggleLogin(false);
+  navigateTo("/dashboard");
+};
 
 const toggleUserPanel = (event) => {
   userMenu.value.toggle(event);
 };
 
+const newInfo = ref({
+  username: "",
+  oldPassword: "",
+  newPassword: "",
+});
+
+const changePass = () => {
+  useFetch("/api/changePassword", {
+    method: "POST",
+    body: newInfo.value,
+  }).then(() => {
+    toast.add({
+      severity: "success",
+      summary: "Succes",
+      detail: "Parola a fost schimbata cu succes",
+      life: 3000,
+    })
+    dialogVisible.value = false;
+  })
+};
 </script>
 <style lang="scss">
 .dashboard-logo {

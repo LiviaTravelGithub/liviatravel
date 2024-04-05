@@ -4,9 +4,12 @@
       <img class="logo" src="~/public/img/logo.svg" alt="logo" />
       <div class="logo-text">Livia Travel</div>
     </div>
-    <i class="pi pi-bars" @click="showSidebar = true"></i>
+    <i class="pi pi-bars" @click="mainStore.toggleSidebar(true)"></i>
     <nav class="main-navigation">
-      <NuxtLink to="/">Acasa</NuxtLink>
+      <NuxtLink to="/">Acasa</NuxtLink> |
+      <NuxtLink to="/oferte">Sejururi/Circuite</NuxtLink> |
+      <NuxtLink to="/contact">Contact</NuxtLink> |
+      <NuxtLink to="/solicitare">Solicita Oferta</NuxtLink>
     </nav>
   </header>
   <main>
@@ -67,13 +70,16 @@
       <div>Livia Travel</div>
     </div>
   </div>
-  <Sidebar v-model:visible="showSidebar" :baseZIndex="10000">
+  <Sidebar v-model:visible="mainStore.sidebarOpen" :baseZIndex="10000">
     <template #header>
-      <img class="logo" src="./public/img/logo.svg" alt="logo" />
+      <img class="logo" src="/img/logo.svg" alt="logo" />
       <div class="logo-text">Livia Travel</div>
     </template>
     <div class="sidebar-container">
       <NuxtLink to="/">Acasa</NuxtLink>
+      <NuxtLink to="/oferte">Sejururi/Circuite</NuxtLink>
+      <NuxtLink to="/contact">Contact</NuxtLink>
+      <NuxtLink to="/solicitare">Solicita Oferta</NuxtLink>
     </div>
   </Sidebar>
 </template>

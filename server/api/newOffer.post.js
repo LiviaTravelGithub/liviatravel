@@ -18,8 +18,16 @@ export default defineEventHandler(async (event) => {
             data.type,
             new Date()
         ]
-        // await connection.query(query, values)
+
+        await connection.query(query, values)
+
+        return {
+            success: true
+        }
     } catch (error) {
         console.log(error)
+        return {
+            success: false
+        }
     }
 })

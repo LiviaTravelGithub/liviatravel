@@ -19,7 +19,7 @@ export default defineNuxtConfig({
   ],
   googleFonts: {
     families: {
-      Montserrat: [400, 700],
+      Montserrat: [400, 500, 600, 700],
     },
   },
   css: ['primevue/resources/themes/aura-light-blue/theme.css', 'primeicons/primeicons.css', '~/assets/css/main.css'],

@@ -25,6 +25,7 @@
 </template>
 <script setup>
 import Button from "primevue/button";
+const store = useMainStore();
 const props = defineProps({
   tour: {
     type: Object,
@@ -47,6 +48,11 @@ const props = defineProps({
   },
 });
 
+const showTour = (tour) => {
+  store.setTour(tour);
+  store.setOfferType("tour");
+  navigateTo("/oferta");
+}
 </script>
 <style lang="scss">
 .tour-card {
@@ -76,6 +82,11 @@ const props = defineProps({
     right: 1rem;
     background: var(--color-2);
     border: 1px solid var(--color-2);
+  }
+  .p-button:hover{
+    background: var(--color-5);
+    border: 1px solid var(--color-5);
+    color: var(--color-2);
   }
 }
 

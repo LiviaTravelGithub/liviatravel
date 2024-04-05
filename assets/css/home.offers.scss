@@ -1,7 +1,7 @@
 .home-container {
     position: relative;
     width: 100%;
-    height: calc(100vh - 70px);
+    height: calc(100vh - 50px);
     .p-carousel-indicators {
         width: fit-content;
         position: absolute;
@@ -20,7 +20,7 @@
 
 .skeleton-container {
     width: 100%;
-    height: calc(100vh - 70px);
+    height: calc(100vh - 50px);
     display: flex;
     gap: 3rem;
     flex-flow: column;
@@ -149,6 +149,29 @@
     margin-bottom: 3rem;
 }
 
+@media screen and (max-width: 1366px) {
+    .offers-container {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media screen and (max-width: 851px) and (orientation: landscape) {
+    .special-offer {
+        width: 80%;
+        height: 85vh;
+    }
+    .p-carousel-indicators {
+        padding: 0.5rem;
+        li{
+            margin: 0 0.5rem;
+            button{
+                padding: 0.3rem;
+            }
+        }
+    }
+}
+
 @media screen and (max-width: 414px) {
     .special-offer-container {
         width: 100%;
@@ -159,26 +182,5 @@
     .offers-container {
         flex-flow: column;
         align-items: center;
-    }
-}
-
-@media screen and (max-width: 1366px) {
-    .offers-container {
-        width: 100%;
-        justify-content: center;
-    }
-    .carousel-container {
-        .img-details {
-            h1 {
-                font-size: 4rem;
-            }
-            h2 {
-                font-size: 2rem;
-            }
-            p {
-                width: 80%;
-                font-size: 1rem;
-            }
-        }
     }
 }

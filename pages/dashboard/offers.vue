@@ -1,196 +1,205 @@
 <template>
-  <DataTable
-    v-model:filters="filters"
-    paginator
-    :rows="6"
-    filterDisplay="row"
-    :value="offers"
-    removableSort
-  >
-    <template #header>
-      <div class="table-header">
-        <IconField iconPosition="left">
-          <InputIcon class="pi pi-search" />
-          <InputText
-            v-model="filters['global'].value"
-            placeholder="Cautare globala"
-          />
-        </IconField>
-        <Button
-          class="p-button-success"
-          label="Creeaza oferta"
-          @click="openCreateOffer()"
-        />
-        <Button
-          icon="pi pi-refresh"
-          class="p-button-warning"
-          label="Actualizeaza tabelul"
-          @click="getOffers()"
-        />
-      </div>
-    </template>
-    <Column field="title" sortable header="Titlu"></Column>
-    <Column field="price" sortable header="Pret"></Column>
-    <Column field="location" sortable header="Locatie"></Column>
-    <Column field="country" sortable header="Tara"></Column>
-    <Column field="duration" sortable header="Nopti"></Column>
-    <Column field="rating" sortable header="Stele"></Column>
-    <Column field="details" sortable header="Detalii">
-      <template #body="slotProps">
-        {{ formatDetails(slotProps.data.details) }}
-      </template>
-    </Column>
-    <Column field="is_special" sortable header="Oferta Speciala">
-      <template #body="slotProps">
-        <i
-          class="pi"
-          :class="slotProps.data.is_special ? 'pi-check' : 'pi-times'"
-        ></i>
-      </template>
-    </Column>
-    <Column>
-      <template #body="slotProps">
-        <div class="table-actions">
-          <Button
-            icon="pi pi-pencil"
-            class="p-button-rounded p-button-success"
-            @click="editOffer(slotProps.data)"
-          />
-          <Button
-            icon="pi pi-trash"
-            class="p-button-rounded p-button-danger"
-            @click="deleteOffer($event, slotProps.data)"
-          />
-        </div>
-      </template>
-    </Column>
-  </DataTable>
-  <Dialog
-    class="offer-dialog"
-    modal
-    v-model:visible="createOfferVisible"
-    header="Creeaza oferta"
-  >
-    <form>
-      <div class="form-row">
-        <div class="form-column">
-          <FloatLabel>
-            <IconField>
-              <InputText id="title" v-model="newOffer.title" />
-            </IconField>
-            <label for="title">Titlu</label>
-          </FloatLabel>
-          <FloatLabel>
-            <IconField>
-              <InputIcon class="pi pi-euro" />
-              <InputText id="price" v-model="newOffer.price" type="number" />
-            </IconField>
-            <label for="price">Pret</label>
-          </FloatLabel>
-        </div>
-        <div class="form-column">
-          <FloatLabel>
-            <IconField>
-              <InputIcon class="pi pi-map-marker" />
-              <InputText id="location" v-model="newOffer.location" />
-            </IconField>
-            <label for="location">Locatie</label>
-          </FloatLabel>
-          <FloatLabel>
-            <IconField>
-              <InputIcon class="pi pi-map" />
-              <InputText id="country" v-model="newOffer.country" />
-            </IconField>
-            <label for="country">Tara</label>
-          </FloatLabel>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-column">
-          <IconField>
-            <InputIcon class="pi pi-clock" />
-            <InputText id="duration" v-model="newOffer.duration" />
-          </IconField>
-        </div>
-        <div class="form-column">
-          <IconField>
-            <InputIcon class="pi pi-star" />
+  <div v-if="store.isLoggedIn">
+    <DataTable
+      v-model:filters="filters"
+      paginator
+      :rows="6"
+      filterDisplay="row"
+      :value="offers"
+      removableSort
+    >
+      <template #header>
+        <div class="table-header">
+          <IconField iconPosition="left">
+            <InputIcon class="pi pi-search" />
             <InputText
-              id="rating"
-              type="number"
-              :min="1"
-              :max="5"
-              v-model="newOffer.rating"
+              v-model="filters['global'].value"
+              placeholder="Cautare globala"
             />
           </IconField>
+          <Button
+            class="p-button-success"
+            label="Creeaza oferta"
+            @click="openCreateOffer()"
+          />
+          <Button
+            icon="pi pi-refresh"
+            class="p-button-warning"
+            label="Actualizeaza tabelul"
+            @click="getOffers()"
+          />
         </div>
-        <div class="form-column">
-          <FloatLabel>
+      </template>
+      <Column field="title" sortable header="Titlu"></Column>
+      <Column field="price" sortable header="Pret"></Column>
+      <Column field="location" sortable header="Locatie"></Column>
+      <Column field="country" sortable header="Tara"></Column>
+      <Column field="duration" sortable header="Nopti"></Column>
+      <Column field="rating" sortable header="Stele"></Column>
+      <Column field="details" sortable header="Detalii">
+        <template #body="slotProps">
+          {{ formatDetails(slotProps.data.details) }}
+        </template>
+      </Column>
+      <Column field="is_special" sortable header="Oferta Speciala">
+        <template #body="slotProps">
+          <i
+            class="pi"
+            :class="slotProps.data.is_special ? 'pi-check' : 'pi-times'"
+          ></i>
+        </template>
+      </Column>
+      <Column>
+        <template #body="slotProps">
+          <div class="table-actions">
+            <Button
+              icon="pi pi-pencil"
+              class="p-button-rounded p-button-success"
+              @click="editOffer(slotProps.data)"
+            />
+            <Button
+              icon="pi pi-trash"
+              class="p-button-rounded p-button-danger"
+              @click="deleteOffer($event, slotProps.data)"
+            />
+          </div>
+        </template>
+      </Column>
+    </DataTable>
+    <Dialog
+      class="offer-dialog"
+      modal
+      v-model:visible="createOfferVisible"
+      header="Creeaza oferta"
+    >
+      <form>
+        <div class="form-row">
+          <div class="form-column">
+            <FloatLabel>
+              <IconField>
+                <InputText id="title" v-model="newOffer.title" />
+              </IconField>
+              <label for="title">Titlu</label>
+            </FloatLabel>
+            <FloatLabel>
+              <IconField>
+                <InputIcon class="pi pi-euro" />
+                <InputText id="price" v-model="newOffer.price" type="number" />
+              </IconField>
+              <label for="price">Pret</label>
+            </FloatLabel>
+          </div>
+          <div class="form-column">
+            <FloatLabel>
+              <IconField>
+                <InputIcon class="pi pi-map-marker" />
+                <InputText id="location" v-model="newOffer.location" />
+              </IconField>
+              <label for="location">Locatie</label>
+            </FloatLabel>
+            <FloatLabel>
+              <IconField>
+                <InputIcon class="pi pi-map" />
+                <InputText id="country" v-model="newOffer.country" />
+              </IconField>
+              <label for="country">Tara</label>
+            </FloatLabel>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-column">
+            <FloatLabel>
+              <IconField>
+                <InputIcon class="pi pi-clock" />
+                <InputText id="duration" v-model="newOffer.duration" />
+              </IconField>
+              <label for="duration">Zile</label>
+            </FloatLabel>
+          </div>
+          <div class="form-column">
+            <FloatLabel>
+              <IconField>
+                <InputIcon class="pi pi-star" />
+                <InputText
+                  id="rating"
+                  type="number"
+                  :min="1"
+                  :max="5"
+                  v-model="newOffer.rating"
+                />
+              </IconField>
+              <label for="rating">Stele</label>
+            </FloatLabel>
+          </div>
+          <div class="form-column">
+            <FloatLabel>
+              <IconField>
+                <Dropdown
+                  v-model="newOffer.type"
+                  :options="['Intern', 'Extern']"
+                />
+              </IconField>
+              <label for="type">Tip oferta</label>
+            </FloatLabel>
+          </div>
+          <div class="form-colum new-special-offer">
+            <h5>Oferta Zilei?</h5>
             <IconField>
-              <Dropdown
-                v-model="newOffer.type"
-                :options="['Intern', 'Extern']"
+              <ToggleButton
+                id="isSpecial"
+                v-model="newOffer.is_special"
+                onLabel="Da"
+                offLabel="Nu"
               />
             </IconField>
-            <label for="type">Tip oferta</label>
-          </FloatLabel>
+          </div>
         </div>
-        <div class="form-colum new-special-offer">
-          <h5>Oferta Zilei?</h5>
+        <div class="form-column description">
           <IconField>
-            <ToggleButton
-              id="isSpecial"
-              v-model="newOffer.is_special"
-              onLabel="Da"
-              offLabel="Nu"
-            />
+            <h5>Descriere</h5>
+            <Textarea id="description" v-model="newOffer.description" />
           </IconField>
         </div>
-      </div>
-      <div class="form-column description">
-        <IconField>
-          <h5>Descriere</h5>
-          <Textarea id="description" v-model="newOffer.description" />
-        </IconField>
-      </div>
-      <div class="form-column-details">
-        <h5>Facilitati</h5>
-        <div
-          class="details-container"
-          v-for="(detail, index) in detailType"
-          :key="index"
-        >
-          <Checkbox v-model="detailValue" :value="detail.label" />
-          <label>{{ detail.label }}</label>
+        <div class="form-column-details">
+          <h5>Facilitati</h5>
+          <div
+            class="details-container"
+            v-for="(detail, index) in detailType"
+            :key="index"
+          >
+            <Checkbox v-model="detailValue" :value="detail.label" />
+            <label>{{ detail.label }}</label>
+          </div>
         </div>
+      </form>
+      <div class="image-upload">
+        <section>
+          <img :src="imagePreview" alt="" />
+          <div class="file-info" v-if="imageFile">
+            Filename: {{ imageFile.name }} <br />
+            File size: {{ formatBytes(imageFile.size, 2) }}
+          </div>
+        </section>
+        <section>
+          <div class="p-button p-button-success file-upload">
+            <InputIcon class="" />
+            <span class="p-button-label">Alege Imagine</span>
+            <input type="file" @change="onFileChange" accept="image/*" />
+          </div>
+        </section>
       </div>
-    </form>
-    <div class="image-upload">
-      <section>
-        <img :src="imagePreview" alt="" />
-        <div class="file-info" v-if="imageFile">
-          Filename: {{ imageFile.name }} <br />
-          File size: {{ formatBytes(imageFile.size, 2) }}
-        </div>
-      </section>
-      <section>
-        <div class="p-button p-button-success file-upload">
-          <InputIcon class="" />
-          <span class="p-button-label">Alege Imagine</span>
-          <input type="file" @change="onFileChange" accept="image/*" />
-        </div>
-      </section>
-    </div>
-    <template #footer>
-      <Button
-        type="submit"
-        label="Salveaza"
-        class="p-button-success"
-        @click="saveOffer"
-      />
-    </template>
-  </Dialog>
-  <ConfirmPopup></ConfirmPopup>
+      <template #footer>
+        <Button
+          type="submit"
+          label="Salveaza"
+          class="p-button-success"
+          @click="saveOffer"
+        />
+      </template>
+    </Dialog>
+    <ConfirmPopup></ConfirmPopup>
+    <Toast />
+  </div>
 </template>
 <script setup>
 import { useMainStore } from "~/stores/main";
@@ -208,6 +217,9 @@ import ConfirmPopup from "primevue/confirmpopup";
 import Dropdown from "primevue/dropdown";
 import IconField from "primevue/iconfield";
 import InputIcon from "primevue/inputicon";
+import Toast from "primevue/toast";
+import {useToast } from "primevue/usetoast";
+const toast = useToast();
 
 const router = useRouter();
 const store = useMainStore();
@@ -304,6 +316,8 @@ const openCreateOffer = () => {
     is_special: false,
     type: "Intern",
   };
+  detailValue.value = [];
+  imagePreview.value = null;
 };
 
 onMounted(() => {
@@ -316,6 +330,12 @@ onMounted(() => {
 const getOffers = async () => {
   const response = await useFetch("/api/offersInfo");
   offers.value = response.data.value.rows;
+  toast.add({
+    severity: "success",
+    summary: "Succes",
+    detail: "Ofertele au fost actualizate cu succes",
+    life: 3000
+  })
 };
 
 const formatDetails = (details) => {
@@ -358,7 +378,7 @@ const onFileChange = (event) => {
   const reader = new FileReader();
   reader.onload = () => {
     imagePreview.value = reader.result;
-    imageFile.value = file;
+    imageFile.value = reader.result;
   };
   reader.readAsDataURL(file);
 };
@@ -375,7 +395,6 @@ const editOffer = (offer) => {
 const saveOffer = (e) => {
   e.preventDefault();
   const offer = formatOffer(newOffer.value);
-
   if (isEditingOffer.value) {
     useFetch("/api/saveOffer", { method: "POST", body: newOffer.value })
       .then(() => {
@@ -383,22 +402,27 @@ const saveOffer = (e) => {
         isEditingOffer.value = false;
         getOffers();
       })
-      .then(() => {});
-  } else {
-    offer.img = `/img/${imageFile.value.name}`;
-    useFetch("/api/newOffer", { method: "POST", body: offer })
       .then(() => {
-        createOfferVisible.value = false;
-        getOffers();
-      })
-      .then(() => {
-        const formData = new FormData();
-        formData.append("image", imageFile.value);
-        useFetch("/api/saveImage", {
-          method: "POST",
-          body: formData,
-        });
+        toast.add({
+          severity: "success",
+          summary: "Succes",
+          detail: "Oferta a fost salvata cu succes",
+          life: 3000
+        })
       });
+  } else {
+    offer.img = imageFile.value;
+    useFetch("/api/newOffer", { method: "POST", body: offer }).then(() => {
+      createOfferVisible.value = false;
+      getOffers();
+    }).then(() => {
+      toast.add({
+        severity: "success",
+        summary: "Succes",
+        detail: "Oferta a fost salvata cu succes",
+        life: 3000
+      })
+    })
   }
 };
 
@@ -418,6 +442,12 @@ const deleteOffer = (event, offer) => {
         body: offer.id,
       }).then(() => {
         getOffers();
+        toast.add({
+        severity: "success",
+        summary: "Succes",
+        detail: "Oferta a fost stersa cu succes",
+        life: 3000
+      })
       });
     },
   });
