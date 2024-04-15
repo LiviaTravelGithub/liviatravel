@@ -12,11 +12,7 @@ export default defineNuxtConfig({
       link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
     }
   },
-  modules: [
-    'nuxt-primevue',
-    '@nuxtjs/google-fonts',
-    '@pinia/nuxt',
-  ],
+  modules: ['nuxt-primevue', '@nuxtjs/google-fonts', '@pinia/nuxt'],
   googleFonts: {
     families: {
       Montserrat: [400, 500, 600, 700],

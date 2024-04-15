@@ -11,10 +11,13 @@
   },
   "dependencies": {
     "@pinia/nuxt": "^0.5.1",
+    "axios": "^1.6.8",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
     "jose": "^5.2.3",
     "leaflet": "^1.9.4",
+    "node-mailjet": "^6.0.5",
+    "nodemailer": "^6.9.13",
     "nuxt": "^3.11.1",
     "pg": "^8.11.4",
     "pinia": "^2.1.7",

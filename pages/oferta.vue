@@ -79,7 +79,7 @@
     </div>
   </div>
 </template>
-  <script setup>
+<script setup>
 import Button from "primevue/button";
 import Rating from "primevue/rating";
 import { onMounted, ref } from "vue";
@@ -87,6 +87,7 @@ import Title from "../components/Title.vue";
 import { useMainStore } from "~/stores/main";
 import RezervationForm from "../components/RezervationForm.vue";
 import TourForm from "../components/TourForm.vue";
+import Toast from "primevue/toast";
 
 const store = useMainStore();
 

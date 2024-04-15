@@ -21,25 +21,17 @@
     </div>
     <div class="form-row">
       <span class="p-float-label">
-        <InputText
-          id="email"
-          type="text"
-          v-model="rezervationData.email"
-        />
+        <InputText id="email" type="text" v-model="rezervationData.email" />
         <label for="email">Email</label>
       </span>
       <span class="p-float-label">
-        <InputText
-          id="phone"
-          type="text"
-          v-model="rezervationData.phone"
-        />
+        <InputText id="phone" type="text" v-model="rezervationData.phone" />
         <label for="phone">Telefon</label>
       </span>
     </div>
     <div class="form-row">
       <span class="p-float-label">
-        <InputText
+        <InputNumber
           id="adults"
           type="number"
           v-model="rezervationData.adults"
@@ -47,17 +39,13 @@
         <label for="adults">Adulti</label>
       </span>
       <span class="p-float-label">
-        <InputText
-          id="rooms"
-          type="number"
-          v-model="rezervationData.rooms"
-        />
+        <InputNumber id="rooms" type="number" v-model="rezervationData.rooms" />
         <label for="rooms">Camere</label>
       </span>
     </div>
     <div class="form-row">
       <span class="p-float-label">
-        <InputText
+        <InputNumber
           id="children"
           type="number"
           v-model="rezervationData.children"
@@ -69,6 +57,7 @@
           id="date"
           dateFormat="dd/mm/yy"
           v-model="rezervationData.date"
+          :manualInput="false"
           showButtonBar
         />
         <label for="date">Data Intrare</label>
@@ -78,7 +67,7 @@
     <div class="form-row-details">
       <table>
         <tr>
-          <td class="table-label">Hotel:</td>
+          <td class="table-label">Oferta:</td>
           <td>{{ formTitle }}</td>
         </tr>
         <tr>
@@ -100,46 +89,51 @@
     </div>
     <Button label="Rezerva" @click="rezerve()" />
   </form>
+  <Toast />
 </template>
 <script setup>
 import InputText from "primevue/inputtext";
+import InputNumber from "primevue/inputnumber";
 import Calendar from "primevue/calendar";
 import { useMainStore } from "~/stores/main";
 import Button from "primevue/button";
 import { useToast } from "primevue/usetoast";
 import { onMounted } from "vue";
+import Toast from "primevue/toast";
 const toast = useToast();
 
 const store = useMainStore();
+const finalPrice = ref(0);
 
-const rezervationData = ref({});
+const rezervationData = ref({
+  adults: 1,
+  rooms: 1,
+  children: 0,
+});
 
 const formTitle = ref("");
-const formRooms = ref(1);
-const formChildren = ref(0);
 const formPrice = ref(0);
 const formLocation = ref("");
 const formCountry = ref("");
 
-
 onMounted(() => {
-  if(store.rezervationOffer === null){
+  if (store.rezervationOffer === null) {
     store.setOffer(JSON.parse(localStorage.getItem("rezervationOffer")));
   }
 
   formTitle.value = store.rezervationOffer.title;
-  formRooms.value = store.rezervationData.rooms;
-  formChildren.value = store.rezervationData.children;
   formPrice.value = store.rezervationOffer.price;
   formLocation.value = store.rezervationOffer.location;
   formCountry.value = store.rezervationOffer.country;
+
+  finalPrice.value = calculatedPrice();
 });
+
 
 const calculatedPrice = () => {
   const price =
-    parseInt(formPrice.value, 10) *
-      parseInt(formRooms.value, 10) +
-    parseInt(formChildren.value, 10) * 100;
+    parseInt(formPrice.value, 10) * parseInt(rezervationData.value.rooms, 10) +
+    parseInt(rezervationData.value.children, 10) * 100;
   return price;
 };
 
@@ -147,17 +141,18 @@ function startDate() {
   let day = "";
   let month = "";
   let year = "";
+  let date;
 
-  if (store.rezervationData.date !== "") {
-    const date = new Date(store.rezervationData.date);
-    day = String(date.getDate()).padStart(2, "0");
-    month = String(date.getMonth() + 1).padStart(2, "0");
-    year = String(date.getFullYear()).slice(-2);
+  if (rezervationData.value.date !== undefined) {
+    date = new Date(rezervationData.value.date);
   } else {
-    day = "01";
-    month = "01";
-    year = "01";
+    date = new Date();
   }
+
+  day = String(date.getDate()).padStart(2, "0");
+  month = String(date.getMonth() + 1).padStart(2, "0");
+  year = String(date.getFullYear()).slice(-2);
+
   return `${day}/${month}/${year}`;
 }
 
@@ -165,62 +160,70 @@ function endDate() {
   let year;
   let month;
   let day;
+  let date;
 
-  if (store.rezervationData.date !== "") {
-    const millisecondsPerDay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day
-    const givenDateTimestamp = new Date(store.rezervationData.date).getTime(); // Get the timestamp of the given date
-    const sevenDaysLaterTimestamp = givenDateTimestamp + 7 * millisecondsPerDay; // Add 7 days' worth of milliseconds
-    const sevenDaysLaterDate = new Date(sevenDaysLaterTimestamp); // Convert the timestamp back to a date
-
-    year = String(sevenDaysLaterDate.getFullYear());
-    month = String(sevenDaysLaterDate.getMonth() + 1).padStart(2, "0");
-    day = String(sevenDaysLaterDate.getDate()).padStart(2, "0");
+  if (rezervationData.value.date !== undefined) {
+    date = new Date(rezervationData.value.date);
   } else {
-    year = "01";
-    month = "01";
-    day = "01";
+    date = new Date();
   }
+
+  const millisecondsPerDay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day
+  const givenDateTimestamp = date.getTime(); // Get the timestamp of the given date
+  const sevenDaysLaterTimestamp = givenDateTimestamp + 7 * millisecondsPerDay; // Add 7 days' worth of milliseconds
+  const sevenDaysLaterDate = new Date(sevenDaysLaterTimestamp); // Convert the timestamp back to a date
+
+  year = String(sevenDaysLaterDate.getFullYear());
+  month = String(sevenDaysLaterDate.getMonth() + 1).padStart(2, "0");
+  day = String(sevenDaysLaterDate.getDate()).padStart(2, "0");
 
   return `${day}/${month}/${year}`;
 }
 
 function rezerve() {
-  console.log(store.rezervationData, store.rezervationOffer);
-
   let rezervationInfo = {
-    firstName: rezervationData.firstName,
-    lastName: rezervationData.lastName,
-    email: rezervationData.email,
-    phone: rezervationData.phone,
-    adults: rezervationData.adults,
-    rooms: rezervationData.rooms,
-    children: rezervationData.children,
-    date: rezervationData.date.toString(),
+    firstName: rezervationData.value.firstName,
+    lastName: rezervationData.value.lastName,
+    email: rezervationData.value.email,
+    phone: rezervationData.value.phone,
+    adults: rezervationData.value.adults,
+    rooms: rezervationData.value.rooms,
+    children: rezervationData.value.children,
     offerDuration: `${startDate()} - ${endDate()}`,
     offerPrice: store.rezervationOffer.price,
+    oferta: formTitle.value,
+    location: `${formLocation.value}, ${formCountry.value}`,
   };
 
-  const people =
-    parseInt(store.rezervationData.adults, 10) +
-    parseInt(store.rezervationData.children, 10);
-
   try {
-    axios.post(`${store.url}/newRezervation`, rezervationInfo).then((res) => {
-      if (res.status === 200) {
-        store.setRezervationVisible(false);
-        store.loadOffers();
-        toast.add({
-          severity: "success",
-          summary: "Rezervare",
-          detail: "Rezervare cu succes!",
-          life: 3000,
-        });
-      } else {
-        console.log(res);
-      }
+    useFetch("/api/rezervation", {
+      method: "POST",
+      body: {
+        rezervationInfo: rezervationInfo,
+      },
+    }).then(() => {
+      rezervationData.value.firstName = "";
+      rezervationData.value.lastName = "";
+      rezervationData.value.email = "";
+      rezervationData.value.phone = "";
+      rezervationData.value.adults = 1;
+      rezervationData.value.rooms = 1;
+      rezervationData.value.children = 0;
+      toast.add({
+        severity: "success",
+        summary: "Rezervare",
+        detail: "Rezervarea a fost plasata cu succes",
+        life: 3000,
+      });
     });
   } catch (error) {
     console.log(error);
+    toast.add({
+      severity: "error",
+      summary: "Eroare",
+      detail: "Rezervarea nu a putut fi plasata",
+      life: 3000,
+    });
   }
 }
 </script>

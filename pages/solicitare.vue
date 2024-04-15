@@ -152,8 +152,9 @@
       </div>
     </div>
   </div>
+  <Toast />
 </template>
-  <script setup>
+<script setup>
 import Button from "primevue/button";
 import Dropdown from "primevue/dropdown";
 import InputText from "primevue/inputtext";
@@ -163,6 +164,7 @@ import Textarea from "primevue/textarea";
 import Checkbox from "primevue/checkbox";
 import { useMainStore } from "~/stores/main";
 import { useToast } from "primevue/usetoast";
+import Toast from "primevue/toast";
 
 const toast = useToast();
 const store = useMainStore();
@@ -226,16 +228,43 @@ const submitOffer = () => {
     formInfo.start_date = formatDate(new Date(formData.value.start_date));
     formInfo.end_date = formatDate(new Date(formData.value.end_date));
 
-    axios.post(`${store.url}/newCustomOffer`, formInfo).then((res) => {
-      if (res.status === 200) {
-        toast.add({
-          severity: "success",
-          summary: "Succes",
-          detail: "Solicitare realizata cu succes!",
-          life: 3000,
-        });
+    useFetch("/api/customRezervation", {
+      method: "POST",
+      body: formInfo,
+    }).then(() => {
+      toast.add({
+        severity: "success",
+        summary: "Succes",
+        detail: "Solicitare realizata cu succes!",
+        life: 3000,
+      });
+      formData.value = {
+        last_name: "",
+        first_name: "",
+        email: "",
+        phone: "",
+        adults: "",
+        children: "",
+        start_date: "",
+        end_date: "",
+        duration: "",
+        destination: "",
+        transport: "",
+        stay_type: "",
+        budget: "",
+        comment: "",
+        currency: "",
+        accept: false,
       }
-    });
+    }).catch((err) => {
+      console.log(err)
+      toast.add({
+        severity: "error",
+        summary: "Eroare",
+        detail: "Solicitare nu a putut fi plasata. Va rugam sa incercati mai tarziu.",
+        life: 3000,
+      })
+    })
   }
 };
 </script>

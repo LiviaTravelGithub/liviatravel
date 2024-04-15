@@ -20,29 +20,17 @@
     </div>
     <div class="form-row tour-form-row">
       <span class="p-float-label">
-        <InputText
-          id="email"
-          type="text"
-          v-model="rezervationData.email"
-        />
+        <InputText id="email" type="text" v-model="rezervationData.email" />
         <label for="email">Email</label>
       </span>
       <span class="p-float-label">
-        <InputText
-          id="phone"
-          type="text"
-          v-model="rezervationData.phone"
-        />
+        <InputText id="phone" type="text" v-model="rezervationData.phone" />
         <label for="phone">Telefon</label>
       </span>
     </div>
     <div class="form-row tour-form-row">
       <span class="p-float-label">
-        <InputText
-          id="adults"
-          type="number"
-          v-model="rezervationData.adults"
-        />
+        <InputText id="adults" type="number" v-model="rezervationData.adults" />
         <label for="adults">Adulti</label>
       </span>
       <span class="p-float-label">
@@ -57,7 +45,7 @@
     <span class="tour-form-info">
       <ul>
         <li>
-          Circuit: <span>{{ rezervationData.title }}</span>
+          Oferta: <span>{{ rezervationData.title }}</span>
         </li>
         <li>
           Persoane:
@@ -81,63 +69,71 @@
     </span>
     <Button label="Rezervare" @click="rezerveTour" />
   </form>
+  <Toast />
 </template>
 <script setup>
 import InputText from "primevue/inputtext";
 import Button from "primevue/button";
 import { useMainStore } from "~/stores/main";
 import { useToast } from "primevue/usetoast";
-import { useRouter } from "vue-router";
-const router = useRouter();
+import Toast from "primevue/toast";
 const toast = useToast();
 const store = useMainStore();
 
 const rezervationData = ref({});
 
 onMounted(() => {
-  if(store.rezervationTour === null){
+  if (store.rezervationTour === null) {
     store.setTour(JSON.parse(localStorage.getItem("rezervationTour")));
   }
-  console.log(store.rezervationTour);
   rezervationData.value.title = store.rezervationTour.title;
   rezervationData.value.adults = 1;
   rezervationData.value.children = 0;
   rezervationData.value.price = store.rezervationTour.price;
 });
 
-// function rezerveTour(e) {
-//   e.preventDefault();
+function rezerveTour(e) {
+  e.preventDefault();
 
-//   const rezervationData = {
-//     firstName: store.tourRezervation.firstName,
-//     lastName: store.tourRezervation.lastName,
-//     email: store.tourRezervation.email,
-//     phone: store.tourRezervation.phone,
-//     adults: store.tourRezervation.adults,
-//     children: store.tourRezervation.children,
-//     tourName: store.rezervationTour.title,
-//   };
+  const rezervationInfo = {
+    firstName: rezervationData.value.firstName,
+    lastName: rezervationData.value.lastName,
+    email: rezervationData.value.email,
+    phone: rezervationData.value.phone,
+    adults: rezervationData.value.adults,
+    children: rezervationData.value.children,
+    tourName: rezervationData.value.title,
+    tourPrice: rezervationData.value.price,
+  };
 
-//   try {
-//     axios
-//       .post(`${store.url}/newRezervationTour`, rezervationData)
-//       .then((res) => {
-//         if (res.status === 200) {
-//           store.setTour(res.data.tour);
-//           toast.add({
-//             severity: "success",
-//             summary: "Succes",
-//             detail: "Rezervare realizata cu succes!",
-//             life: 3000,
-//           });
-
-//           router.push({ name: "offers" });
-//         }
-//       });
-//   } catch (error) {
-//     console.log(error);
-//   }
-// }
+  try {
+    useFetch("/api/tourRezervation", {
+      method: "POST",
+      body: { rezervationInfo },
+    }).then(() => {
+      rezervationData.value.firstName = "";
+      rezervationData.value.lastName = "";
+      rezervationData.value.email = "";
+      rezervationData.value.phone = "";
+      rezervationData.value.adults = 1;
+      rezervationData.value.children = 0;
+      toast.add({
+        severity: "success",
+        summary: "Rezervare",
+        detail: "Rezervarea a fost plasata cu succes",
+        life: 3000,
+      });
+    });
+  } catch (error) {
+    console.log(error);
+    toast.add({
+      severity: "error",
+      summary: "Rezervare",
+      detail: "Rezervarea nu a putut fi plasata",
+      life: 3000,
+    });
+  }
+}
 </script>
 <style lang="scss">
 .tour-form {
@@ -161,7 +157,7 @@ onMounted(() => {
     font-size: 1.5rem;
     margin: 2rem 0;
     padding: 0;
-    color: var(--color-3);
+    color: var(--color-2);
     span {
       font-weight: bold;
       color: var(--color-2);
