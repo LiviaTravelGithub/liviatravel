@@ -80,7 +80,7 @@ export default defineEventHandler(async (event) => {
     try {
         const response = await axios.post(`${BASE_URL}/gateway/devices/${DEVICE_ID}/sendSMS?apiKey=${API_KEY}`, {
             receivers: ['+40773773816'],
-            smsBody: `Solicitare oferta de la ${data.rezervationInfo.firstName} ${data.rezervationInfo.lastName}, <${data.rezervationInfo.email}>. Va rugam verificati mailul pentru mai mult detalii.`,
+            smsBody: `Solicitare oferta de la ${data.first_name} ${data.last_name}, <${data.email}>. Va rugam verificati mailul pentru mai mult detalii.`,
         })
         console.log(response.data)
     } catch (error) {
