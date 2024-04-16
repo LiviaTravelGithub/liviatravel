@@ -90,6 +90,8 @@
     <Button label="Rezerva" @click="rezerve()" />
   </form>
   <Toast />
+  <Dialog v-model:visible="dialogVisible" modal header="Va rugam asteptati...">
+  </Dialog>
 </template>
 <script setup>
 import InputText from "primevue/inputtext";
@@ -104,6 +106,8 @@ const toast = useToast();
 
 const store = useMainStore();
 const finalPrice = ref(0);
+
+const dialogVisible = ref(false);
 
 const rezervationData = ref({
   adults: 1,
@@ -195,6 +199,8 @@ function rezerve() {
     location: `${formLocation.value}, ${formCountry.value}`,
   };
 
+  dialogVisible.value = true;
+
   try {
     useFetch("/api/rezervation", {
       method: "POST",
@@ -215,6 +221,7 @@ function rezerve() {
         detail: "Rezervarea a fost plasata cu succes",
         life: 3000,
       });
+      dialogVisible.value = false;
     });
   } catch (error) {
     console.log(error);
@@ -224,6 +231,7 @@ function rezerve() {
       detail: "Rezervarea nu a putut fi plasata",
       life: 3000,
     });
+    dialogVisible.value = false;
   }
 }
 </script>
