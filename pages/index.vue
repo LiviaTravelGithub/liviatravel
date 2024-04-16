@@ -52,10 +52,7 @@
             <p>{{ specialOffer.description.substring(0, descLimit) }}...</p>
           </div>
           <div class="offer-details">
-            <Button
-              label="Rezervă"
-              @click="showOffer(specialOffer)"
-            />
+            <Button label="Rezervă" @click="showOffer(specialOffer)" />
             <div class="special-offer-price">
               <div>
                 {{ parseFloat(specialOffer.price).toLocaleString("ro-RO") }}
@@ -95,7 +92,7 @@ const showOffer = (offer) => {
   store.setOffer(offer);
   store.setOfferType("offer");
   navigateTo("/oferta");
-}
+};
 
 const isMobile = () => {
   if (
@@ -126,7 +123,6 @@ const offers = ref();
 
 onMounted(async () => {
   const offersData = allOffers.data.value.rows;
-  console.log("home",offersData);
   carouselOffers.value = offersData.slice(0, 3);
   offersData.forEach((offer) => {
     if (offer.is_special) {

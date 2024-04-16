@@ -184,7 +184,6 @@ const offersLoading = ref(false);
 const priceFilterValue = ref([priceMin.value, priceMax.value]);
 
 onMounted(() => {
-  console.log("offers", allOffers.data.value.rows);
   setTimeout(() => {
     switch (offerType.value) {
       case "offers":
