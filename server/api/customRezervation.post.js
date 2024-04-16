@@ -54,16 +54,17 @@ export default defineEventHandler(async (event) => {
         </tr>
         <tr style="height: 25px">
             <td style="width: 150px;font-weight: bold;border-bottom: 1px dotted">Nopti</td>
-            <td style="border-bottom: 1px dotted">${data.duration}</td>
+            <td style="border-bottom: 1px dotted">${data.offerDuration}</td>
         </tr>
         <tr style="height: 25px">
             <td style="width: 150px;font-weight: bold;border-bottom: 1px dotted">Buget</td>
             <td style="border-bottom: 1px dotted">${data.budget} ${data.currency}</td>
         </tr>
-    </table>
-    <h3>Alte informatii</h3>
-    <p>${data.comment}</p>
-    `
+        <tr style="height: 25px">
+            <td style="width: 150px;font-weight: bold;border-bottom: 1px dotted">Alte informatii</td>
+            <td style="border-bottom: 1px dotted">${data.comment}</td>
+        </tr>
+    </table>`
 
     try {
         const response = await transporter.sendMail({

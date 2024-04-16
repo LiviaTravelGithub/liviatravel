@@ -152,8 +152,6 @@
       </div>
     </div>
   </div>
-  <Dialog v-model:visible="dialogVisible" modal header="Va rugam asteptati...">
-  </Dialog>
   <Toast />
 </template>
 <script setup>
@@ -167,11 +165,9 @@ import Checkbox from "primevue/checkbox";
 import { useMainStore } from "~/stores/main";
 import { useToast } from "primevue/usetoast";
 import Toast from "primevue/toast";
-import Dialog from 'primevue/dialog';
 
 const toast = useToast();
 const store = useMainStore();
-const dialogVisible = ref(false);
 
 const formData = ref({
   last_name: "",
@@ -232,8 +228,6 @@ const submitOffer = () => {
     formInfo.start_date = formatDate(new Date(formData.value.start_date));
     formInfo.end_date = formatDate(new Date(formData.value.end_date));
 
-    dialogVisible.value = true
-
     useFetch("/api/customRezervation", {
       method: "POST",
       body: formInfo,
@@ -244,7 +238,6 @@ const submitOffer = () => {
         detail: "Solicitare realizata cu succes!",
         life: 3000,
       });
-      dialogVisible.value = false;
       formData.value = {
         last_name: "",
         first_name: "",
@@ -271,7 +264,6 @@ const submitOffer = () => {
         detail: "Solicitare nu a putut fi plasata. Va rugam sa incercati mai tarziu.",
         life: 3000,
       })
-      dialogVisible.value = false
     })
   }
 };
