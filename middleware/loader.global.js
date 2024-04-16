@@ -5,5 +5,5 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     mainStore.toggleLoader(true);
     setTimeout(() => {
         mainStore.toggleLoader(false);
-    }, 1000);
+    }, 1500);
 })
