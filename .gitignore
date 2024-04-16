@@ -5,6 +5,7 @@
 .nitro
 .cache
 .bck
+.test
 dist
 
 # Node dependencies

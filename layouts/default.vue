@@ -83,7 +83,7 @@
     </div>
   </Sidebar>
 </template>
-  <script setup>
+<script setup>
 import Logo from "~/components/Logo.vue";
 import { useMainStore } from "~/stores/main";
 import { onMounted } from "vue";

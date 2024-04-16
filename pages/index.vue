@@ -126,10 +126,12 @@ const offers = ref();
 
 onMounted(async () => {
   const offersData = allOffers.data.value.rows;
+  console.log("home",offersData);
   carouselOffers.value = offersData.slice(0, 3);
   offersData.forEach((offer) => {
     if (offer.is_special) {
       specialOffer.value = offer;
+      specialOffer.value.rating = parseInt(specialOffer.value.rating, 10);
     }
   });
   offers.value = latestOffers();
