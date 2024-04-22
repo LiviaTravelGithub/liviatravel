@@ -92,7 +92,7 @@ const mainStore = useMainStore();
 const showSidebar = ref(false);
 
 onMounted(() => {
-  mainStore.toggleLoader();
+  mainStore.toggleLoader(true);
 });
 </script>
 <style lang="scss">

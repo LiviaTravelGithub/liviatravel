@@ -71,7 +71,7 @@ export default defineEventHandler(async (event) => {
     try {
         const response = await transporter.sendMail({
             from: 'backend@example.com',
-            to: 'stanislav.alexandru@gmail.com',
+            to: 'livia.travel.render@gmail.com',
             subject: 'Rezervare noua',
             html: mailHTML
         })

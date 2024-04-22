@@ -30,9 +30,15 @@ export const useMainStore = defineStore('main', {
         sidebarOpen: false,
         dbRezervations: [],
         dbTourRezervations: [],
-        appReady: false
+        appReady: false,
+        allOffers: null,
+        allTours: null,
     }),
     actions: {
+        loadData(offers, tours) {
+            this.allOffers = offers
+            this.allTours = tours
+        },
         toggleLoader(value) {
             this.showLoader = value !== undefined ? value : !this.showLoader
         },

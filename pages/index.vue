@@ -81,9 +81,6 @@ import Skeleton from "primevue/skeleton";
 import Title from "../components/Title.vue";
 import OfferCard from "../components/OfferCard.vue";
 import TourCard from "../components/TourCard.vue";
-const allOffers = await useFetch("/api/offersInfo");
-const allTours = await useFetch("/api/toursInfo");
-
 const store = useMainStore();
 
 const descLimit = ref(200);
@@ -117,42 +114,39 @@ const specialOffer = ref({
   price: 0,
   rating: 0,
 });
-
-const tours = ref();
-const offers = ref();
-
-onMounted(() => {
-  if(allOffers !== null && allTours !== null){
-    store.toggleLoader(false);
-  }
-  const offersData = allOffers.data.value.rows;
-  carouselOffers.value = offersData.slice(0, 3);
-  offersData.forEach((offer) => {
-    if (offer.is_special) {
-      specialOffer.value = offer;
-      specialOffer.value.rating = parseInt(specialOffer.value.rating, 10);
-    }
-  });
-  offers.value = latestOffers();
-  tours.value = latestTours();
-  if (isMobile()) {
-    descLimit.value = 150;
-  }
-});
-
 const latestOffers = () => {
-  const offersData = allOffers.data.value.rows;
+  const offersData = store.allOffers;
   return offersData
     .sort((a, b) => new Date(b.date_created) - new Date(a.date_created))
     .slice(0, 6);
 };
 
 const latestTours = () => {
-  const toursData = allTours.data.value.rows;
+  const toursData = store.allTours;
   return toursData
     .sort((a, b) => new Date(b.date_created) - new Date(a.date_created))
     .slice(0, 6);
 };
+
+const tours = ref();
+const offers = ref();
+watchEffect(() => {
+  if (store.allOffers !== null && store.allTours !== null) {
+    const offersData = store.allOffers;
+    carouselOffers.value = offersData.slice(0, 3);
+    offersData.forEach((offer) => {
+      if (offer.is_special) {
+        specialOffer.value = offer;
+        specialOffer.value.rating = parseInt(specialOffer.value.rating, 10);
+      }
+    });
+    offers.value = latestOffers();
+    tours.value = latestTours();
+    if (isMobile()) {
+      descLimit.value = 150;
+    }
+  }
+});
 </script>
 <style lang="scss">
 @import "~/assets/css/home.carousel.scss";

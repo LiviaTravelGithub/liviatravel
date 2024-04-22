@@ -19,6 +19,7 @@
     "node-mailjet": "^6.0.5",
     "nodemailer": "^6.9.13",
     "nuxt": "^3.11.1",
+    "nuxt-cloudflare-analytics": "^1.0.8",
     "pg": "^8.11.4",
     "pinia": "^2.1.7",
     "primeicons": "^7.0.0",

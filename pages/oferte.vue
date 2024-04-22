@@ -154,12 +154,9 @@ import Skeleton from "primevue/skeleton";
 
 const store = useMainStore();
 
-const allOffers = await useFetch("/api/offersInfo");
-const allTours = await useFetch("/api/toursInfo");
-
 const allInfo = {
-  offers: allOffers.data.value.rows,
-  tours: allTours.data.value.rows,
+  offers: store.allOffers,
+  tours: store.allTours,
 };
 
 const rowsPerPage = ref(6);
@@ -183,24 +180,23 @@ const offersLoading = ref(false);
 
 const priceFilterValue = ref([priceMin.value, priceMax.value]);
 
-onMounted(() => {
-  if (allOffers !== null && allTours !== null) {
-    store.toggleLoader(false);
+watchEffect(() => {
+  if (store.allOffers !== null && store.allTours !== null) {
+    setTimeout(() => {
+      switch (offerType.value) {
+        case "offers":
+          filteredOffers.value = store.allOffers;
+          break;
+        case "tours":
+          filteredOffers.value = store.allTours;
+          break;
+        default:
+          break;
+      }
+      OFFERS_UTIL.loadCategories();
+      displayedOffers.value = filteredOffers.value.slice(0, rowsPerPage.value);
+    }, 300);
   }
-  setTimeout(() => {
-    switch (offerType.value) {
-      case "offers":
-        filteredOffers.value = allOffers.data.value.rows;
-        break;
-      case "tours":
-        filteredOffers.value = allTours.data.value.rows;
-        break;
-      default:
-        break;
-    }
-    OFFERS_UTIL.loadCategories();
-    displayedOffers.value = filteredOffers.value.slice(0, rowsPerPage.value);
-  }, 300);
 });
 
 function handlePaginatorChange(event) {
@@ -333,9 +329,9 @@ const offerItemSelect = (event) => {
 
 watch(offerType, () => {
   if (offerType.value === "offers") {
-    filteredOffers.value = allOffers.data.value.rows;
+    filteredOffers.value = store.allOffers;
   } else if (offerType.value === "tours") {
-    filteredOffers.value = allTours.data.value.rows;
+    filteredOffers.value = store.allTours;
   }
   displayedOffers.value = filteredOffers.value.slice(0, rowsPerPage.value);
   OFFERS_UTIL.loadCategories();
