@@ -4,11 +4,11 @@ dotenv.config()
 const { Pool } = pg
 
 const pool = new Pool({
-    user: process.env.PORT ? process.env.PG_USER : 'liviatour',
-    password: process.env.PORT ? process.env.PG_PASSWORD : 'YQtvKYFdhhfpaw27GBFqB6Z5YMfCGjnv',
-    database: process.env.PORT ? process.env.PG_DATABASE : 'offers_yy98',
+    user: process.env.PG_USER,
+    password: process.env.PG_PASSWORD,
+    database: process.env.PG_DATABASE,
     port: 5432,
-    host: process.env.PORT ? process.env.PG_HOST : 'localhost',
+    host: process.env.PG_HOST,
     ssl: { rejectUnauthorized: false }
 })
 
