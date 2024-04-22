@@ -3,7 +3,9 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     const mainStore = useMainStore();
     mainStore.toggleSidebar(false);
     mainStore.toggleLoader(true);
-    setTimeout(() => {
-        mainStore.toggleLoader(false);
-    }, 1000);
+    if(to.fullPath !== '/oferte' && to.fullPath !== '/'){
+        setTimeout(() => {
+            mainStore.toggleLoader(false);
+        }, 1000);
+    }
 })

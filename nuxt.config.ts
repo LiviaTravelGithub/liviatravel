@@ -12,7 +12,16 @@ export default defineNuxtConfig({
       link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
     }
   },
-  modules: ['nuxt-primevue', '@nuxtjs/google-fonts', '@pinia/nuxt'],
+  modules: ['nuxt-primevue', '@nuxtjs/google-fonts', '@pinia/nuxt', '@nuxtjs/turnstile'],
+  turnstile: {
+    siteKey: process.env.TURNSTILE_KEY,
+    addValidateEndpoint: true
+  },
+  runtimeConfig: {
+    turnstile: {
+      secretKey: process.env.TURNSTILE_SECRET,
+    }
+  },
   googleFonts: {
     families: {
       Montserrat: [400, 500, 600, 700],

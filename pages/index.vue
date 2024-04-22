@@ -121,7 +121,10 @@ const specialOffer = ref({
 const tours = ref();
 const offers = ref();
 
-onMounted(async () => {
+onMounted(() => {
+  if(allOffers !== null && allTours !== null){
+    store.toggleLoader(false);
+  }
   const offersData = allOffers.data.value.rows;
   carouselOffers.value = offersData.slice(0, 3);
   offersData.forEach((offer) => {

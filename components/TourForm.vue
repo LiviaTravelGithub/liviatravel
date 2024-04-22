@@ -67,6 +67,7 @@
         </li>
       </ul>
     </span>
+    <NuxtTurnstile v-model="rezervationData.captchaToken" />
     <Button label="Rezervare" @click="rezerveTour" />
   </form>
   <Toast />
@@ -104,26 +105,48 @@ function rezerveTour(e) {
     children: rezervationData.value.children,
     tourName: rezervationData.value.title,
     tourPrice: rezervationData.value.price,
+    captcha: rezervationData.value.captchaToken,
   };
 
-  try {
-    useFetch("/api/tourRezervation", {
-      method: "POST",
-      body: { rezervationInfo },
-    }).then(() => {
-      rezervationData.value.firstName = "";
-      rezervationData.value.lastName = "";
-      rezervationData.value.email = "";
-      rezervationData.value.phone = "";
-      rezervationData.value.adults = 1;
-      rezervationData.value.children = 0;
-      toast.add({
-        severity: "success",
-        summary: "Rezervare",
-        detail: "Rezervarea a fost plasata cu succes",
-        life: 3000,
-      });
+  if (
+    rezervationData.value.firstName === undefined ||
+    rezervationData.value.lastName === undefined ||
+    rezervationData.value.email === undefined ||
+    rezervationData.value.phone === undefined
+  ) {
+    toast.add({
+      severity: "error",
+      summary: "Eroare",
+      detail: "Completeaza toate campurile",
+      life: 3000,
     });
+    return;
+  }
+
+  try {
+    useFetch("/_turnstile/validate", rezervationData.value.captchaToken).then(
+      (response) => {
+        if (response.data.success) {
+          useFetch("/api/tourRezervation", {
+            method: "POST",
+            body: { rezervationInfo },
+          }).then(() => {
+            rezervationData.value.firstName = "";
+            rezervationData.value.lastName = "";
+            rezervationData.value.email = "";
+            rezervationData.value.phone = "";
+            rezervationData.value.adults = 1;
+            rezervationData.value.children = 0;
+            toast.add({
+              severity: "success",
+              summary: "Rezervare",
+              detail: "Rezervarea a fost plasata cu succes",
+              life: 3000,
+            });
+          });
+        }
+      }
+    );
   } catch (error) {
     console.log(error);
     toast.add({

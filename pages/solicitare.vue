@@ -148,6 +148,7 @@
         </div>
       </div>
       <div class="request-row">
+        <NuxtTurnstile v-model="formData.captchaToken" />
         <Button label="Trimite oferta" @click="submitOffer()" />
       </div>
     </div>
@@ -228,43 +229,76 @@ const submitOffer = () => {
     formInfo.start_date = formatDate(new Date(formData.value.start_date));
     formInfo.end_date = formatDate(new Date(formData.value.end_date));
 
-    useFetch("/api/customRezervation", {
-      method: "POST",
-      body: formInfo,
-    }).then(() => {
-      toast.add({
-        severity: "success",
-        summary: "Succes",
-        detail: "Solicitare realizata cu succes!",
-        life: 3000,
-      });
-      formData.value = {
-        last_name: "",
-        first_name: "",
-        email: "",
-        phone: "",
-        adults: "",
-        children: "",
-        start_date: "",
-        end_date: "",
-        duration: "",
-        destination: "",
-        transport: "",
-        stay_type: "",
-        budget: "",
-        comment: "",
-        currency: "",
-        accept: false,
-      }
-    }).catch((err) => {
-      console.log(err)
+    if (
+      formInfo.first_name === undefined ||
+      formInfo.last_name === undefined ||
+      formInfo.email === undefined ||
+      formInfo.phone === undefined ||
+      formInfo.adults === undefined ||
+      formInfo.children === undefined ||
+      formInfo.start_date === undefined ||
+      formInfo.end_date === undefined ||
+      formInfo.destination === undefined ||
+      formInfo.transport === undefined ||
+      formInfo.stay_type === undefined ||
+      formInfo.budget === undefined ||
+      formInfo.currency === undefined
+    ) {
       toast.add({
         severity: "error",
         summary: "Eroare",
-        detail: "Solicitare nu a putut fi plasata. Va rugam sa incercati mai tarziu.",
+        detail: "Completeaza toate campurile",
         life: 3000,
-      })
-    })
+      });
+      return;
+    }
+
+    useFetch("/_turnstile/validate", formData.value.captchaToken).then(
+      (response) => {
+        if (!response.data.success) {
+          useFetch("/api/customRezervation", {
+            method: "POST",
+            body: formInfo,
+          })
+            .then(() => {
+              toast.add({
+                severity: "success",
+                summary: "Succes",
+                detail: "Solicitare realizata cu succes!",
+                life: 3000,
+              });
+              formData.value = {
+                last_name: "",
+                first_name: "",
+                email: "",
+                phone: "",
+                adults: "",
+                children: "",
+                start_date: "",
+                end_date: "",
+                duration: "",
+                destination: "",
+                transport: "",
+                stay_type: "",
+                budget: "",
+                comment: "",
+                currency: "",
+                accept: false,
+              };
+            })
+            .catch((err) => {
+              console.log(err);
+              toast.add({
+                severity: "error",
+                summary: "Eroare",
+                detail:
+                  "Solicitare nu a putut fi plasata. Va rugam sa incercati mai tarziu.",
+                life: 3000,
+              });
+            });
+        }
+      }
+    );
   }
 };
 </script>
@@ -400,11 +434,12 @@ button[type="submit"] {
   .request-form {
     width: 100%;
     margin: 1rem 0;
-    input{
+    input {
       width: 100%;
     }
   }
-  .request-row, .request-column{
+  .request-row,
+  .request-column {
     flex-flow: column wrap;
     align-items: center;
     #start_date,
@@ -416,22 +451,21 @@ button[type="submit"] {
     #currency,
     #budget,
     #comment,
-    .p-float-label{
+    .p-float-label {
       width: 80vw !important;
     }
     .p-input-text {
-      width: 100% !important; 
+      width: 100% !important;
     }
   }
 
-  .checkbox-container{
+  .checkbox-container {
     width: 80vw;
     flex-flow: row;
     gap: 1rem !important;
-    label{
+    label {
       font-size: 0.8rem;
     }
   }
-  
 }
 </style>

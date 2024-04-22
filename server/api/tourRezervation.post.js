@@ -1,16 +1,18 @@
 import nodemailer from 'nodemailer'
 import axios from 'axios'
+import dotenv from 'dotenv'
+dotenv.config()
 export default defineEventHandler(async (event) => {
     const data = await readBody(event)
     const BASE_URL = 'https://api.textbee.dev/api/v1'
-    const API_KEY = '32e27458-6778-4932-b7e2-7ebf11cfea30'
-    const DEVICE_ID = '661613e06db45ae354384639'
+    const API_KEY = process.env.TXT_API_KEY
+    const DEVICE_ID = process.env.TXT_DEVICE
     const transporter = nodemailer.createTransport({
-        host: "sandbox.smtp.mailtrap.io",
+        host: process.env.MT_HOST,
         port: 2525,
         auth: {
-            user: "7bf0579336798f",
-            pass: "2bb0fac6d51104"
+            user: process.env.MT_USER,
+            pass: process.env.MT_PASS
         }
     });
 

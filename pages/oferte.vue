@@ -184,6 +184,9 @@ const offersLoading = ref(false);
 const priceFilterValue = ref([priceMin.value, priceMax.value]);
 
 onMounted(() => {
+  if (allOffers !== null && allTours !== null) {
+    store.toggleLoader(false);
+  }
   setTimeout(() => {
     switch (offerType.value) {
       case "offers":
@@ -594,17 +597,17 @@ watch(offerType, () => {
   }
 }
 @media screen and (max-width: 851px), (max-width: 414px) {
-  .offers{
+  .offers {
     display: flex;
     flex-flow: column;
   }
-  .offers-sidebar{
+  .offers-sidebar {
     width: 90%;
   }
   .offers-view-wrapper {
     width: 100%;
   }
-  .offers-wrapper{
+  .offers-wrapper {
     width: 100%;
     justify-content: center;
   }
