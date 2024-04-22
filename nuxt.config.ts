@@ -12,10 +12,7 @@ export default defineNuxtConfig({
       link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
     }
   },
-  modules: ['nuxt-primevue', '@nuxtjs/google-fonts', '@pinia/nuxt', '@nuxtjs/turnstile', 'nuxt-cloudflare-analytics'],
-  cloudflareAnalytics: {
-    token: process.env.CLOUDFLARE_ANALYTICS_TOKEN
-  },
+  modules: ['nuxt-primevue', '@nuxtjs/google-fonts', '@pinia/nuxt', '@nuxtjs/turnstile'],
   turnstile: {
     siteKey: process.env.TURNSTILE_KEY,
     addValidateEndpoint: true
