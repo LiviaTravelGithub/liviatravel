@@ -4,16 +4,21 @@
       <Title :text="`Contact`" />
       <div class="contact-info">
         <div id="facebook" class="contact-card">
-          <i class="pi pi-facebook"></i>
-          <div class="contact-text">Livia Travel</div>
+          <a
+            href="https://www.facebook.com/people/LIVIA-Travel/100057546485308/"
+            target="_blank"
+          >
+            <i class="pi pi-facebook"></i>
+            <div class="contact-text">Livia Travel</div>
+          </a>
         </div>
         <div id="email" class="contact-card">
           <i class="pi pi-envelope"></i>
-          <div class="contact-text">mail@mailexemplu.com</div>
+          <div class="contact-text">agentie@clipastour.ro</div>
         </div>
         <div id="phone" class="contact-card">
           <i class="pi pi-phone"></i>
-          <div class="contact-text">+40 123 456 789</div>
+          <div class="contact-text">0725 121 246</div>
         </div>
         <div id="program" class="contact-card">
           <i class="pi pi-clock"></i>
@@ -88,6 +93,14 @@ const zoom = ref(18);
   gap: 2rem;
   #facebook {
     background: #4267b2;
+    a {
+      display: flex;
+      flex-flow: column wrap;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+      gap: 2rem;
+    }
   }
   #email {
     background: var(--color-4);
@@ -152,11 +165,11 @@ const zoom = ref(18);
     width: 100%;
     height: 300px;
   }
-  .offers-title{
+  .offers-title {
     width: 100%;
-    display: none
+    display: none;
   }
-  .contact-card i{
+  .contact-card i {
     font-size: 3rem !important;
   }
 }

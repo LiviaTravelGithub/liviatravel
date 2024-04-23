@@ -148,11 +148,12 @@
         </div>
       </div>
       <div class="request-row">
-        <NuxtTurnstile v-model="formData.captchaToken" />
+        <NuxtTurnstile ref="turnstile" v-model="formData.captchaToken" />
         <Button label="Trimite oferta" @click="submitOffer()" />
       </div>
     </div>
   </div>
+  <Dialog header="Va rugam asteptati..." v-model:visible="dialogVisible" modal />
   <Toast />
 </template>
 <script setup>
@@ -169,6 +170,9 @@ import Toast from "primevue/toast";
 
 const toast = useToast();
 const store = useMainStore();
+
+const turnstile = ref();
+const dialogVisible = ref(false);
 
 const formData = ref({
   last_name: "",
@@ -224,6 +228,9 @@ const submitOffer = () => {
       life: 3000,
     });
   } else {
+
+    dialogVisible.value = true;
+    
     const { accept: _, ...formInfo } = formData.value;
 
     formInfo.start_date = formatDate(new Date(formData.value.start_date));
@@ -253,14 +260,22 @@ const submitOffer = () => {
       return;
     }
 
-    useFetch("/_turnstile/validate", formData.value.captchaToken).then(
+    useFetch("/api/validate", {
+      method: "POST",
+      body: {
+        token: rezervationData.value.captchaToken,
+      }
+    }).then(
       (response) => {
-        if (!response.data.success) {
+        if (response.data.value.success) {
           useFetch("/api/customRezervation", {
             method: "POST",
             body: formInfo,
           })
             .then(() => {
+
+              dialogVisible.value = false;
+
               toast.add({
                 severity: "success",
                 summary: "Succes",
@@ -285,6 +300,8 @@ const submitOffer = () => {
                 currency: "",
                 accept: false,
               };
+            }).then(() => {
+              turnstile.value.reset();
             })
             .catch((err) => {
               console.log(err);

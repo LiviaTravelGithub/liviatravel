@@ -67,9 +67,10 @@
         </li>
       </ul>
     </span>
-    <NuxtTurnstile v-model="rezervationData.captchaToken" />
+    <NuxtTurnstile ref="turnstile" v-model="rezervationData.captchaToken" />
     <Button label="Rezervare" @click="rezerveTour" />
   </form>
+  <Dialog header="Va rugam asteptati..." v-model:visible="dialogVisible" modal />
   <Toast />
 </template>
 <script setup>
@@ -80,6 +81,9 @@ import { useToast } from "primevue/usetoast";
 import Toast from "primevue/toast";
 const toast = useToast();
 const store = useMainStore();
+
+const turnstile = ref();
+const dialogVisible = ref(false);
 
 const rezervationData = ref({});
 
@@ -95,6 +99,8 @@ onMounted(() => {
 
 function rezerveTour(e) {
   e.preventDefault();
+
+  dialogVisible.value = true;
 
   const rezervationInfo = {
     firstName: rezervationData.value.firstName,
@@ -124,9 +130,14 @@ function rezerveTour(e) {
   }
 
   try {
-    useFetch("/_turnstile/validate", rezervationData.value.captchaToken).then(
+    useFetch("/api/validate", {
+      method: "POST",
+      body: {
+        token: rezervationData.value.captchaToken,
+      }
+    }).then(
       (response) => {
-        if (response.data.success) {
+        if (response.data.value.success) {
           useFetch("/api/tourRezervation", {
             method: "POST",
             body: { rezervationInfo },
@@ -137,13 +148,18 @@ function rezerveTour(e) {
             rezervationData.value.phone = "";
             rezervationData.value.adults = 1;
             rezervationData.value.children = 0;
+
+            dialogVisible.value = false;
+
             toast.add({
               severity: "success",
               summary: "Rezervare",
               detail: "Rezervarea a fost plasata cu succes",
               life: 3000,
             });
-          });
+          }).then(() => {
+            turnstile.value.reset();
+          })
         }
       }
     );

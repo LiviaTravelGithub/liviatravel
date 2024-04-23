@@ -87,9 +87,10 @@
         </tr>
       </table>
     </div>
-    <NuxtTurnstile v-model="rezervationData.captchaToken" />
+    <NuxtTurnstile ref="turnstile" v-model="rezervationData.captchaToken" />
     <Button label="Rezerva" @click="rezerve()" />
   </form>
+  <Dialog header="Va rugam asteptati..." v-model:visible="dialogVisible" modal />
   <Toast />
 </template>
 <script setup>
@@ -105,6 +106,9 @@ const toast = useToast();
 
 const store = useMainStore();
 const finalPrice = ref(0);
+
+const turnstile = ref();
+const dialogVisible = ref(false);
 
 const rezervationData = ref({
   adults: 1,
@@ -181,6 +185,7 @@ function endDate() {
 }
 
 function rezerve() {
+  dialogVisible.value = true;
   let rezervationInfo = {
     firstName: rezervationData.value.firstName,
     lastName: rezervationData.value.lastName,
@@ -207,9 +212,14 @@ function rezerve() {
   }
 
   try {
-    useFetch("/_turnstile/validate", rezervationData.value.captchaToken).then(
+    useFetch("/api/validate", {
+      method: "POST",
+      body: {
+        token: rezervationData.value.captchaToken,
+      }
+    }).then(
       (response) => {
-        if (!response.data.success) {
+        if (response.data.value.success) {
           useFetch("/api/rezervation", {
             method: "POST",
             body: {
@@ -223,13 +233,18 @@ function rezerve() {
             rezervationData.value.adults = 1;
             rezervationData.value.rooms = 1;
             rezervationData.value.children = 0;
+
+            dialogVisible.value = false;
+
             toast.add({
               severity: "success",
               summary: "Rezervare",
               detail: "Rezervarea a fost plasata cu succes",
               life: 3000,
             });
-          });
+          }).then(() => {
+            turnstile.value.reset();
+          })
         }
       }
     );

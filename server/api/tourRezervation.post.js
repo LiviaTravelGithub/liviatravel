@@ -54,9 +54,9 @@ export default defineEventHandler(async (event) => {
 
     try {
         const response = await transporter.sendMail({
-            from: 'backend@example.com',
-            to: 'livia.travel.render@gmail.com',
-            subject: 'Rezervare noua',
+            from: process.env.MT_DOMAIN,
+            to: process.env.MT_RECIPIENT,
+            subject: `Rezervare noua de la <${data.rezervationInfo.email}>`,
             html: mailHTML
         })
         console.log(response)
@@ -65,8 +65,9 @@ export default defineEventHandler(async (event) => {
     }
 
     try {
+        const txtRecipients = process.env.TXT_RECIPIENT.split(',')
         const response = await axios.post(`${BASE_URL}/gateway/devices/${DEVICE_ID}/sendSMS?apiKey=${API_KEY}`, {
-            receivers: ['+40773773816'],
+            receivers: txtRecipients,
             smsBody: `Rezervare noua pentru ${data.rezervationInfo.firstName} ${data.rezervationInfo.lastName}, <${data.rezervationInfo.email}>. Va rugam verificati mailul pentru mai mult detalii.`,
         })
         console.log(response.data)

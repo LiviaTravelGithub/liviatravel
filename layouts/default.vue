@@ -22,28 +22,25 @@
         <div>Livia Travel</div>
       </div>
       <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum, earum
-        aliquid, harum corporis incidunt quaerat nisi officia, placeat dolor
-        voluptatum qui eius fuga necessitatibus facere rem quos eum consectetur?
-        Quidem.
+        Tu fă-ţi bagajele şi noi ne ocupăm de restul!
       </p>
     </div>
     <div class="footer-container">
       <h3>Contact</h3>
       <ul class="footer-contact">
-        <li><i class="pi pi-facebook" /> <a href="#">Livia Travel</a></li>
+        <li><i class="pi pi-facebook" /> <a href="https://www.facebook.com/people/LIVIA-Travel/100057546485308/" target="_blank">Livia Travel</a></li>
         <li>
-          <i class="pi pi-envelope" /> <a href="mailto:">mail@exemplu.com</a>
+          <i class="pi pi-envelope" /> <a href="mailto:agentie@clipastour.ro">agentie@clipastour.ro</a>
         </li>
         <li>
-          <i class="pi pi-phone" /><a href="tel:+4012345678">+4012345678</a>
+          <i class="pi pi-phone" /><a href="tel:0725121246">0725 121 246</a>
         </li>
       </ul>
     </div>
     <div class="footer-container">
       <h3>Adresa</h3>
       <div class="footer-address">
-        <i class="pi pi-map-marker" /> Strada Exemplu nr. 123, Campina, Prahova
+        <i class="pi pi-map-marker" /> Bulevardul Carol I nr. 36 parter, Campina, Prahova
       </div>
       <div class="footer-program">
         <div>Luni-Vineri:</div>
