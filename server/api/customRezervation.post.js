@@ -80,7 +80,7 @@ export default defineEventHandler(async (event) => {
         console.log(error)
     }
     try {
-        const txtRecipients = process.env.TXT_RECIPIENT.split(',')
+        const txtRecipients = process.env.TXT_NUMBERS.split(',')
         const response = await axios.post(`${BASE_URL}/gateway/devices/${DEVICE_ID}/sendSMS?apiKey=${API_KEY}`, {
             receivers: txtRecipients,
             smsBody: `Solicitare oferta de la ${data.first_name} ${data.last_name}, <${data.email}>. Va rugam verificati mailul pentru mai mult detalii.`,
